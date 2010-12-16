@@ -1,0 +1,2651 @@
+  [4;36;1mSQL (0.0ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+  [4;35;1mSQL (10.0ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (284.0ms)[0m   [0;1mCREATE TABLE `schema_migrations` (`version` varchar(255) NOT NULL) ENGINE=InnoDB[0m
+  [4;35;1mSQL (124.0ms)[0m   [0mCREATE UNIQUE INDEX `unique_schema_migrations` ON `schema_migrations` (`version`)[0m
+  [4;36;1mSQL (5.0ms)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (1.0ms)[0m   [0mSELECT version FROM schema_migrations[0m
+Migrating to CreateRadiantTables (1)
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (11.0ms)[0m   [0mCREATE TABLE `config` (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `key` varchar(40) DEFAULT '' NOT NULL, `value` varchar(255) DEFAULT '') ENGINE=InnoDB[0m
+  [4;36;1mSQL (14.0ms)[0m   [0;1mCREATE UNIQUE INDEX `key` ON `config` (`key`)[0m
+  [4;35;1mSQL (3.0ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (36.0ms)[0m   [0;1mCREATE TABLE `pages` (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `title` varchar(255), `slug` varchar(100), `breadcrumb` varchar(160), `behavior` varchar(25), `status_id` int(11) DEFAULT 1 NOT NULL, `parent_id` int(11), `layout_id` int(11), `created_at` datetime, `updated_at` datetime, `published_at` datetime, `created_by` int(11), `updated_by` int(11)) ENGINE=InnoDB[0m
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (41.0ms)[0m   [0;1mCREATE TABLE `page_parts` (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(100), `filter` varchar(25), `content` text, `page_id` int(11)) ENGINE=InnoDB[0m
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (34.0ms)[0m   [0;1mCREATE TABLE `snippets` (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(100) DEFAULT '' NOT NULL, `filter` varchar(25), `content` text, `created_at` datetime, `updated_at` datetime, `created_by` int(11), `updated_by` int(11)) ENGINE=InnoDB[0m
+  [4;35;1mSQL (31.0ms)[0m   [0mCREATE UNIQUE INDEX `name` ON `snippets` (`name`)[0m
+  [4;36;1mSQL (3.0ms)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (11.0ms)[0m   [0mCREATE TABLE `layouts` (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(100), `content` text, `created_at` datetime, `updated_at` datetime, `created_by` int(11), `updated_by` int(11)) ENGINE=InnoDB[0m
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (10.0ms)[0m   [0mCREATE TABLE `users` (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(100), `email` varchar(255), `login` varchar(40) DEFAULT '' NOT NULL, `password` varchar(40), `admin` tinyint DEFAULT 0 NOT NULL, `developer` tinyint DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `created_by` int(11), `updated_by` int(11)) ENGINE=InnoDB[0m
+  [4;36;1mSQL (15.0ms)[0m   [0;1mCREATE UNIQUE INDEX `login` ON `users` (`login`)[0m
+  [4;35;1mSQL (24.0ms)[0m   [0mINSERT INTO schema_migrations (version) VALUES ('1')[0m
+Migrating to InsertInitialData (2)
+  [4;36;1mSQL (1.0ms)[0m   [0;1mINSERT INTO schema_migrations (version) VALUES ('2')[0m
+Migrating to RenameBehaviorColumn (3)
+  [4;35;1mSQL (20.0ms)[0m   [0mSHOW FIELDS FROM `pages`[0m
+  [4;36;1mSQL (6.0ms)[0m   [0;1mSHOW COLUMNS FROM `pages` LIKE 'behavior'[0m
+  [4;35;1mSQL (20.0ms)[0m   [0mALTER TABLE `pages` CHANGE `behavior` `behavior_id` varchar(25) DEFAULT NULL[0m
+  [4;36;1mSQL (1.0ms)[0m   [0;1mINSERT INTO schema_migrations (version) VALUES ('3')[0m
+Migrating to RenameFilterColumn (4)
+  [4;35;1mSQL (3.0ms)[0m   [0mSHOW FIELDS FROM `page_parts`[0m
+  [4;36;1mSQL (6.0ms)[0m   [0;1mSHOW COLUMNS FROM `page_parts` LIKE 'filter'[0m
+  [4;35;1mSQL (50.0ms)[0m   [0mALTER TABLE `page_parts` CHANGE `filter` `filter_id` varchar(25) DEFAULT NULL[0m
+  [4;36;1mSQL (6.0ms)[0m   [0;1mSHOW FIELDS FROM `snippets`[0m
+  [4;35;1mSQL (14.0ms)[0m   [0mSHOW COLUMNS FROM `snippets` LIKE 'filter'[0m
+  [4;36;1mSQL (26.0ms)[0m   [0;1mALTER TABLE `snippets` CHANGE `filter` `filter_id` varchar(25) DEFAULT NULL[0m
+  [4;35;1mSQL (2.0ms)[0m   [0mINSERT INTO schema_migrations (version) VALUES ('4')[0m
+Migrating to AddVirtualColumnToPage (5)
+  [4;36;1mSQL (18.0ms)[0m   [0;1mALTER TABLE `pages` ADD `virtual` tinyint(1) DEFAULT 0 NOT NULL[0m
+  [4;35;1mSQL (1.0ms)[0m   [0mINSERT INTO schema_migrations (version) VALUES ('5')[0m
+Migrating to IntegerColumnsToBoolean (6)
+  [4;36;1mUser Load (2.0ms)[0m   [0;1mSELECT * FROM `users` ORDER BY name[0m
+  [4;35;1mSQL (12.0ms)[0m   [0mALTER TABLE `users` DROP `admin`[0m
+  [4;36;1mSQL (13.0ms)[0m   [0;1mALTER TABLE `users` ADD `admin` tinyint(1) DEFAULT 0 NOT NULL[0m
+  [4;35;1mUser Load (1.0ms)[0m   [0mSELECT * FROM `users` ORDER BY name[0m
+  [4;36;1mSQL (13.0ms)[0m   [0;1mALTER TABLE `users` DROP `developer`[0m
+  [4;35;1mSQL (14.0ms)[0m   [0mALTER TABLE `users` ADD `developer` tinyint(1) DEFAULT 0 NOT NULL[0m
+  [4;36;1mSQL (1.0ms)[0m   [0;1mINSERT INTO schema_migrations (version) VALUES ('6')[0m
+Migrating to RemoveVirtualColumnFromPage (7)
+  [4;35;1mSQL (15.0ms)[0m   [0mALTER TABLE `pages` DROP `virtual`[0m
+  [4;36;1mSQL (1.0ms)[0m   [0;1mINSERT INTO schema_migrations (version) VALUES ('7')[0m
+Migrating to AddVirtualColumnToPageAgain (8)
+  [4;35;1mSQL (142.0ms)[0m   [0mALTER TABLE `pages` ADD `virtual` tinyint(1) DEFAULT 0 NOT NULL[0m
+  [4;36;1mSQL (2.0ms)[0m   [0;1mINSERT INTO schema_migrations (version) VALUES ('8')[0m
+Migrating to AddContentTypeFieldToLayout (9)
+  [4;35;1mSQL (16.0ms)[0m   [0mALTER TABLE `layouts` ADD `content_type` varchar(40)[0m
+  [4;36;1mSQL (1.0ms)[0m   [0;1mINSERT INTO schema_migrations (version) VALUES ('9')[0m
+Migrating to MergeBehaviorsAndPages (10)
+  [4;35;1mMergeBehaviorsAndPages::OldPage Load (3.0ms)[0m   [0mSELECT * FROM `pages` [0m
+  [4;36;1mSQL (4.0ms)[0m   [0;1mSHOW FIELDS FROM `pages`[0m
+  [4;35;1mSQL (8.0ms)[0m   [0mSHOW COLUMNS FROM `pages` LIKE 'behavior_id'[0m
+  [4;36;1mSQL (36.0ms)[0m   [0;1mALTER TABLE `pages` CHANGE `behavior_id` `type` varchar(25) DEFAULT NULL[0m
+  [4;35;1mSQL (2.0ms)[0m   [0mINSERT INTO schema_migrations (version) VALUES ('10')[0m
+Migrating to RenameTypeColumnOnPageToClassName (11)
+  [4;36;1mSQL (6.0ms)[0m   [0;1mSHOW FIELDS FROM `pages`[0m
+  [4;35;1mSQL (6.0ms)[0m   [0mSHOW COLUMNS FROM `pages` LIKE 'type'[0m
+  [4;36;1mSQL (286.0ms)[0m   [0;1mALTER TABLE `pages` CHANGE `type` `class_name` varchar(25) DEFAULT NULL[0m
+  [4;35;1mSQL (1.0ms)[0m   [0mINSERT INTO schema_migrations (version) VALUES ('11')[0m
+Migrating to CreateExtensionMeta (12)
+  [4;36;1mSQL (17.0ms)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (28.0ms)[0m   [0mCREATE TABLE `extension_meta` (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255), `schema_version` int(11) DEFAULT 0, `enabled` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;36;1mSQL (1.0ms)[0m   [0;1mINSERT INTO schema_migrations (version) VALUES ('12')[0m
+Migrating to AddNotesFieldToUser (13)
+  [4;35;1mSQL (36.0ms)[0m   [0mALTER TABLE `users` ADD `notes` text[0m
+  [4;36;1mSQL (2.0ms)[0m   [0;1mINSERT INTO schema_migrations (version) VALUES ('13')[0m
+Migrating to RenameConfigDefaultPartsKey (14)
+  [4;35;1mRadiant::Config Columns (4.0ms)[0m   [0mSHOW FIELDS FROM `config`[0m
+  [4;36;1mRadiant::Config Load (18.0ms)[0m   [0;1mSELECT * FROM `config` WHERE (`config`.`key` = 'default.parts') LIMIT 1[0m
+  [4;35;1mSQL (2.0ms)[0m   [0mINSERT INTO schema_migrations (version) VALUES ('14')[0m
+Migrating to AddOptimisticLocking (15)
+  [4;36;1mSQL (30.0ms)[0m   [0;1mALTER TABLE `pages` ADD `lock_version` int(11) DEFAULT 0[0m
+  [4;35;1mSQL (31.0ms)[0m   [0mALTER TABLE `layouts` ADD `lock_version` int(11) DEFAULT 0[0m
+  [4;36;1mSQL (14.0ms)[0m   [0;1mALTER TABLE `snippets` ADD `lock_version` int(11) DEFAULT 0[0m
+  [4;35;1mSQL (51.0ms)[0m   [0mALTER TABLE `users` ADD `lock_version` int(11) DEFAULT 0[0m
+  [4;36;1mSQL (1.0ms)[0m   [0;1mINSERT INTO schema_migrations (version) VALUES ('15')[0m
+Migrating to AddSessions (16)
+  [4;35;1mSQL (54.0ms)[0m   [0mCREATE TABLE `sessions` (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `session_id` varchar(255), `data` text, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (19.0ms)[0m   [0;1mCREATE INDEX `index_sessions_on_session_id` ON `sessions` (`session_id`)[0m
+  [4;35;1mSQL (30.0ms)[0m   [0mCREATE INDEX `index_sessions_on_updated_at` ON `sessions` (`updated_at`)[0m
+  [4;36;1mSQL (1.0ms)[0m   [0;1mINSERT INTO schema_migrations (version) VALUES ('16')[0m
+Migrating to RenameCreatedByUpdatedByColumns (17)
+  [4;35;1mSQL (6.0ms)[0m   [0mSHOW FIELDS FROM `pages`[0m
+  [4;36;1mSQL (6.0ms)[0m   [0;1mSHOW COLUMNS FROM `pages` LIKE 'created_by'[0m
+  [4;35;1mSQL (32.0ms)[0m   [0mALTER TABLE `pages` CHANGE `created_by` `created_by_id` int(11) DEFAULT NULL[0m
+  [4;36;1mSQL (6.0ms)[0m   [0;1mSHOW FIELDS FROM `pages`[0m
+  [4;35;1mSQL (5.0ms)[0m   [0mSHOW COLUMNS FROM `pages` LIKE 'updated_by'[0m
+  [4;36;1mSQL (57.0ms)[0m   [0;1mALTER TABLE `pages` CHANGE `updated_by` `updated_by_id` int(11) DEFAULT NULL[0m
+  [4;35;1mSQL (7.0ms)[0m   [0mSHOW FIELDS FROM `snippets`[0m
+  [4;36;1mSQL (11.0ms)[0m   [0;1mSHOW COLUMNS FROM `snippets` LIKE 'created_by'[0m
+  [4;35;1mSQL (37.0ms)[0m   [0mALTER TABLE `snippets` CHANGE `created_by` `created_by_id` int(11) DEFAULT NULL[0m
+  [4;36;1mSQL (5.0ms)[0m   [0;1mSHOW FIELDS FROM `snippets`[0m
+  [4;35;1mSQL (9.0ms)[0m   [0mSHOW COLUMNS FROM `snippets` LIKE 'updated_by'[0m
+  [4;36;1mSQL (41.0ms)[0m   [0;1mALTER TABLE `snippets` CHANGE `updated_by` `updated_by_id` int(11) DEFAULT NULL[0m
+  [4;35;1mSQL (8.0ms)[0m   [0mSHOW FIELDS FROM `layouts`[0m
+  [4;36;1mSQL (10.0ms)[0m   [0;1mSHOW COLUMNS FROM `layouts` LIKE 'created_by'[0m
+  [4;35;1mSQL (35.0ms)[0m   [0mALTER TABLE `layouts` CHANGE `created_by` `created_by_id` int(11) DEFAULT NULL[0m
+  [4;36;1mSQL (8.0ms)[0m   [0;1mSHOW FIELDS FROM `layouts`[0m
+  [4;35;1mSQL (9.0ms)[0m   [0mSHOW COLUMNS FROM `layouts` LIKE 'updated_by'[0m
+  [4;36;1mSQL (54.0ms)[0m   [0;1mALTER TABLE `layouts` CHANGE `updated_by` `updated_by_id` int(11) DEFAULT NULL[0m
+  [4;35;1mSQL (5.0ms)[0m   [0mSHOW FIELDS FROM `users`[0m
+  [4;36;1mSQL (8.0ms)[0m   [0;1mSHOW COLUMNS FROM `users` LIKE 'created_by'[0m
+  [4;35;1mSQL (18.0ms)[0m   [0mALTER TABLE `users` CHANGE `created_by` `created_by_id` int(11) DEFAULT NULL[0m
+  [4;36;1mSQL (5.0ms)[0m   [0;1mSHOW FIELDS FROM `users`[0m
+  [4;35;1mSQL (8.0ms)[0m   [0mSHOW COLUMNS FROM `users` LIKE 'updated_by'[0m
+  [4;36;1mSQL (59.0ms)[0m   [0;1mALTER TABLE `users` CHANGE `updated_by` `updated_by_id` int(11) DEFAULT NULL[0m
+  [4;35;1mSQL (1.0ms)[0m   [0mINSERT INTO schema_migrations (version) VALUES ('17')[0m
+Migrating to AddDescriptionAndKeywordsToPages (18)
+  [4;36;1mSQL (46.0ms)[0m   [0;1mALTER TABLE `pages` ADD `description` varchar(255)[0m
+  [4;35;1mSQL (61.0ms)[0m   [0mALTER TABLE `pages` ADD `keywords` varchar(255)[0m
+  [4;36;1mSQL (1.0ms)[0m   [0;1mINSERT INTO schema_migrations (version) VALUES ('18')[0m
+Migrating to AddSaltToUsers (19)
+  [4;35;1mSQL (46.0ms)[0m   [0mALTER TABLE `users` ADD `salt` varchar(255)[0m
+  [4;36;1mUser Update (12.0ms)[0m   [0;1mUPDATE `users` SET `salt` = 'sweet harmonious biscuits' [0m
+  [4;35;1mSQL (2.0ms)[0m   [0mINSERT INTO schema_migrations (version) VALUES ('19')[0m
+Migrating to AddSessionInfoToUsers (20)
+  [4;36;1mSQL (51.0ms)[0m   [0;1mALTER TABLE `users` ADD `session_token` varchar(255)[0m
+  [4;35;1mSQL (55.0ms)[0m   [0mALTER TABLE `users` ADD `session_expire` datetime[0m
+  [4;36;1mSQL (1.0ms)[0m   [0;1mINSERT INTO schema_migrations (version) VALUES ('20')[0m
+Migrating to RemoveSessionExpireFromUsers (21)
+  [4;35;1mSQL (39.0ms)[0m   [0mALTER TABLE `users` DROP `session_expire`[0m
+  [4;36;1mSQL (1.0ms)[0m   [0;1mINSERT INTO schema_migrations (version) VALUES ('21')[0m
+Migrating to AddIndexes (20081203140407)
+  [4;35;1mSQL (81.0ms)[0m   [0mCREATE INDEX `pages_class_name` ON `pages` (`class_name`)[0m
+  [4;36;1mSQL (59.0ms)[0m   [0;1mCREATE INDEX `pages_parent_id` ON `pages` (`parent_id`)[0m
+  [4;35;1mSQL (182.0ms)[0m   [0mCREATE INDEX `pages_child_slug` ON `pages` (`slug`, `parent_id`)[0m
+  [4;36;1mSQL (265.0ms)[0m   [0;1mCREATE INDEX `pages_published` ON `pages` (`virtual`, `status_id`)[0m
+  [4;35;1mSQL (38.0ms)[0m   [0mCREATE INDEX `parts_by_page` ON `page_parts` (`page_id`, `name`)[0m
+  [4;36;1mSQL (2.0ms)[0m   [0;1mINSERT INTO schema_migrations (version) VALUES ('20081203140407')[0m
+  [4;35;1mSQL (14.0ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (1.0ms)[0m   [0mSELECT version FROM schema_migrations[0m
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (3.0ms)[0m   [0mSHOW FIELDS FROM `config`[0m
+  [4;36;1mSQL (7.0ms)[0m   [0;1mdescribe `config`[0m
+  [4;35;1mSQL (43.0ms)[0m   [0mSHOW KEYS FROM `config`[0m
+  [4;36;1mSQL (3.0ms)[0m   [0;1mSHOW FIELDS FROM `extension_meta`[0m
+  [4;35;1mSQL (6.0ms)[0m   [0mdescribe `extension_meta`[0m
+  [4;36;1mSQL (4.0ms)[0m   [0;1mSHOW KEYS FROM `extension_meta`[0m
+  [4;35;1mSQL (3.0ms)[0m   [0mSHOW FIELDS FROM `layouts`[0m
+  [4;36;1mSQL (9.0ms)[0m   [0;1mdescribe `layouts`[0m
+  [4;35;1mSQL (6.0ms)[0m   [0mSHOW KEYS FROM `layouts`[0m
+  [4;36;1mSQL (3.0ms)[0m   [0;1mSHOW FIELDS FROM `page_parts`[0m
+  [4;35;1mSQL (8.0ms)[0m   [0mdescribe `page_parts`[0m
+  [4;36;1mSQL (4.0ms)[0m   [0;1mSHOW KEYS FROM `page_parts`[0m
+  [4;35;1mSQL (3.0ms)[0m   [0mSHOW FIELDS FROM `pages`[0m
+  [4;36;1mSQL (6.0ms)[0m   [0;1mdescribe `pages`[0m
+  [4;35;1mSQL (3.0ms)[0m   [0mSHOW KEYS FROM `pages`[0m
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW FIELDS FROM `sessions`[0m
+  [4;35;1mSQL (6.0ms)[0m   [0mdescribe `sessions`[0m
+  [4;36;1mSQL (4.0ms)[0m   [0;1mSHOW KEYS FROM `sessions`[0m
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW FIELDS FROM `snippets`[0m
+  [4;36;1mSQL (7.0ms)[0m   [0;1mdescribe `snippets`[0m
+  [4;35;1mSQL (5.0ms)[0m   [0mSHOW KEYS FROM `snippets`[0m
+  [4;36;1mSQL (3.0ms)[0m   [0;1mSHOW FIELDS FROM `users`[0m
+  [4;35;1mSQL (8.0ms)[0m   [0mdescribe `users`[0m
+  [4;36;1mSQL (6.0ms)[0m   [0;1mSHOW KEYS FROM `users`[0m
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSELECT version FROM schema_migrations[0m
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (3.0ms)[0m   [0;1mSHOW FIELDS FROM `config`[0m
+  [4;35;1mSQL (8.0ms)[0m   [0mdescribe `config`[0m
+  [4;36;1mSQL (7.0ms)[0m   [0;1mSHOW KEYS FROM `config`[0m
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW FIELDS FROM `extension_meta`[0m
+  [4;36;1mSQL (6.0ms)[0m   [0;1mdescribe `extension_meta`[0m
+  [4;35;1mSQL (3.0ms)[0m   [0mSHOW KEYS FROM `extension_meta`[0m
+  [4;36;1mSQL (3.0ms)[0m   [0;1mSHOW FIELDS FROM `layouts`[0m
+  [4;35;1mSQL (7.0ms)[0m   [0mdescribe `layouts`[0m
+  [4;36;1mSQL (5.0ms)[0m   [0;1mSHOW KEYS FROM `layouts`[0m
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW FIELDS FROM `page_parts`[0m
+  [4;36;1mSQL (6.0ms)[0m   [0;1mdescribe `page_parts`[0m
+  [4;35;1mSQL (3.0ms)[0m   [0mSHOW KEYS FROM `page_parts`[0m
+  [4;36;1mSQL (3.0ms)[0m   [0;1mSHOW FIELDS FROM `pages`[0m
+  [4;35;1mSQL (6.0ms)[0m   [0mdescribe `pages`[0m
+  [4;36;1mSQL (3.0ms)[0m   [0;1mSHOW KEYS FROM `pages`[0m
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW FIELDS FROM `sessions`[0m
+  [4;36;1mSQL (7.0ms)[0m   [0;1mdescribe `sessions`[0m
+  [4;35;1mSQL (4.0ms)[0m   [0mSHOW KEYS FROM `sessions`[0m
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW FIELDS FROM `snippets`[0m
+  [4;35;1mSQL (7.0ms)[0m   [0mdescribe `snippets`[0m
+  [4;36;1mSQL (5.0ms)[0m   [0;1mSHOW KEYS FROM `snippets`[0m
+  [4;35;1mSQL (3.0ms)[0m   [0mSHOW FIELDS FROM `users`[0m
+  [4;36;1mSQL (8.0ms)[0m   [0;1mdescribe `users`[0m
+  [4;35;1mSQL (6.0ms)[0m   [0mSHOW KEYS FROM `users`[0m
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mSELECT version FROM schema_migrations[0m
+Migrating to CreateRadiantTables (1)
+Migrating to InsertInitialData (2)
+Migrating to RenameBehaviorColumn (3)
+Migrating to RenameFilterColumn (4)
+Migrating to AddVirtualColumnToPage (5)
+Migrating to IntegerColumnsToBoolean (6)
+Migrating to RemoveVirtualColumnFromPage (7)
+Migrating to AddVirtualColumnToPageAgain (8)
+Migrating to AddContentTypeFieldToLayout (9)
+Migrating to MergeBehaviorsAndPages (10)
+Migrating to RenameTypeColumnOnPageToClassName (11)
+Migrating to CreateExtensionMeta (12)
+Migrating to AddNotesFieldToUser (13)
+Migrating to RenameConfigDefaultPartsKey (14)
+Migrating to AddOptimisticLocking (15)
+Migrating to AddSessions (16)
+Migrating to RenameCreatedByUpdatedByColumns (17)
+Migrating to AddDescriptionAndKeywordsToPages (18)
+Migrating to AddSaltToUsers (19)
+Migrating to AddSessionInfoToUsers (20)
+Migrating to RemoveSessionExpireFromUsers (21)
+Migrating to AddIndexes (20081203140407)
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (1.0ms)[0m   [0mSELECT version FROM schema_migrations[0m
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (3.0ms)[0m   [0mSHOW FIELDS FROM `config`[0m
+  [4;36;1mSQL (8.0ms)[0m   [0;1mdescribe `config`[0m
+  [4;35;1mSQL (5.0ms)[0m   [0mSHOW KEYS FROM `config`[0m
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW FIELDS FROM `extension_meta`[0m
+  [4;35;1mSQL (5.0ms)[0m   [0mdescribe `extension_meta`[0m
+  [4;36;1mSQL (3.0ms)[0m   [0;1mSHOW KEYS FROM `extension_meta`[0m
+  [4;35;1mSQL (3.0ms)[0m   [0mSHOW FIELDS FROM `layouts`[0m
+  [4;36;1mSQL (7.0ms)[0m   [0;1mdescribe `layouts`[0m
+  [4;35;1mSQL (5.0ms)[0m   [0mSHOW KEYS FROM `layouts`[0m
+  [4;36;1mSQL (3.0ms)[0m   [0;1mSHOW FIELDS FROM `page_parts`[0m
+  [4;35;1mSQL (6.0ms)[0m   [0mdescribe `page_parts`[0m
+  [4;36;1mSQL (4.0ms)[0m   [0;1mSHOW KEYS FROM `page_parts`[0m
+  [4;35;1mSQL (3.0ms)[0m   [0mSHOW FIELDS FROM `pages`[0m
+  [4;36;1mSQL (6.0ms)[0m   [0;1mdescribe `pages`[0m
+  [4;35;1mSQL (3.0ms)[0m   [0mSHOW KEYS FROM `pages`[0m
+  [4;36;1mSQL (3.0ms)[0m   [0;1mSHOW FIELDS FROM `sessions`[0m
+  [4;35;1mSQL (7.0ms)[0m   [0mdescribe `sessions`[0m
+  [4;36;1mSQL (5.0ms)[0m   [0;1mSHOW KEYS FROM `sessions`[0m
+  [4;35;1mSQL (3.0ms)[0m   [0mSHOW FIELDS FROM `snippets`[0m
+  [4;36;1mSQL (8.0ms)[0m   [0;1mdescribe `snippets`[0m
+  [4;35;1mSQL (5.0ms)[0m   [0mSHOW KEYS FROM `snippets`[0m
+  [4;36;1mSQL (3.0ms)[0m   [0;1mSHOW FIELDS FROM `users`[0m
+  [4;35;1mSQL (9.0ms)[0m   [0mdescribe `users`[0m
+  [4;36;1mSQL (7.0ms)[0m   [0;1mSHOW KEYS FROM `users`[0m
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mSELECT version FROM schema_migrations[0m
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW FIELDS FROM `config`[0m
+  [4;35;1mSQL (7.0ms)[0m   [0mdescribe `config`[0m
+  [4;36;1mSQL (5.0ms)[0m   [0;1mSHOW KEYS FROM `config`[0m
+  [4;35;1mSQL (3.0ms)[0m   [0mSHOW FIELDS FROM `extension_meta`[0m
+  [4;36;1mSQL (5.0ms)[0m   [0;1mdescribe `extension_meta`[0m
+  [4;35;1mSQL (3.0ms)[0m   [0mSHOW KEYS FROM `extension_meta`[0m
+  [4;36;1mSQL (3.0ms)[0m   [0;1mSHOW FIELDS FROM `layouts`[0m
+  [4;35;1mSQL (7.0ms)[0m   [0mdescribe `layouts`[0m
+  [4;36;1mSQL (5.0ms)[0m   [0;1mSHOW KEYS FROM `layouts`[0m
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW FIELDS FROM `page_parts`[0m
+  [4;36;1mSQL (6.0ms)[0m   [0;1mdescribe `page_parts`[0m
+  [4;35;1mSQL (4.0ms)[0m   [0mSHOW KEYS FROM `page_parts`[0m
+  [4;36;1mSQL (3.0ms)[0m   [0;1mSHOW FIELDS FROM `pages`[0m
+  [4;35;1mSQL (6.0ms)[0m   [0mdescribe `pages`[0m
+  [4;36;1mSQL (3.0ms)[0m   [0;1mSHOW KEYS FROM `pages`[0m
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW FIELDS FROM `sessions`[0m
+  [4;36;1mSQL (7.0ms)[0m   [0;1mdescribe `sessions`[0m
+  [4;35;1mSQL (4.0ms)[0m   [0mSHOW KEYS FROM `sessions`[0m
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW FIELDS FROM `snippets`[0m
+  [4;35;1mSQL (7.0ms)[0m   [0mdescribe `snippets`[0m
+  [4;36;1mSQL (5.0ms)[0m   [0;1mSHOW KEYS FROM `snippets`[0m
+  [4;35;1mSQL (3.0ms)[0m   [0mSHOW FIELDS FROM `users`[0m
+  [4;36;1mSQL (8.0ms)[0m   [0;1mdescribe `users`[0m
+  [4;35;1mSQL (6.0ms)[0m   [0mSHOW KEYS FROM `users`[0m
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (1.0ms)[0m   [0mSELECT version FROM schema_migrations[0m
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (3.0ms)[0m   [0mSHOW FIELDS FROM `config`[0m
+  [4;36;1mSQL (7.0ms)[0m   [0;1mdescribe `config`[0m
+  [4;35;1mSQL (5.0ms)[0m   [0mSHOW KEYS FROM `config`[0m
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW FIELDS FROM `extension_meta`[0m
+  [4;35;1mSQL (4.0ms)[0m   [0mdescribe `extension_meta`[0m
+  [4;36;1mSQL (3.0ms)[0m   [0;1mSHOW KEYS FROM `extension_meta`[0m
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW FIELDS FROM `layouts`[0m
+  [4;36;1mSQL (7.0ms)[0m   [0;1mdescribe `layouts`[0m
+  [4;35;1mSQL (4.0ms)[0m   [0mSHOW KEYS FROM `layouts`[0m
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW FIELDS FROM `page_parts`[0m
+  [4;35;1mSQL (6.0ms)[0m   [0mdescribe `page_parts`[0m
+  [4;36;1mSQL (4.0ms)[0m   [0;1mSHOW KEYS FROM `page_parts`[0m
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW FIELDS FROM `pages`[0m
+  [4;36;1mSQL (5.0ms)[0m   [0;1mdescribe `pages`[0m
+  [4;35;1mSQL (4.0ms)[0m   [0mSHOW KEYS FROM `pages`[0m
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW FIELDS FROM `sessions`[0m
+  [4;35;1mSQL (7.0ms)[0m   [0mdescribe `sessions`[0m
+  [4;36;1mSQL (4.0ms)[0m   [0;1mSHOW KEYS FROM `sessions`[0m
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW FIELDS FROM `snippets`[0m
+  [4;36;1mSQL (7.0ms)[0m   [0;1mdescribe `snippets`[0m
+  [4;35;1mSQL (5.0ms)[0m   [0mSHOW KEYS FROM `snippets`[0m
+  [4;36;1mSQL (3.0ms)[0m   [0;1mSHOW FIELDS FROM `users`[0m
+  [4;35;1mSQL (8.0ms)[0m   [0mdescribe `users`[0m
+  [4;36;1mSQL (5.0ms)[0m   [0;1mSHOW KEYS FROM `users`[0m
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mSELECT version FROM schema_migrations[0m
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW FIELDS FROM `config`[0m
+  [4;35;1mSQL (7.0ms)[0m   [0mdescribe `config`[0m
+  [4;36;1mSQL (5.0ms)[0m   [0;1mSHOW KEYS FROM `config`[0m
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW FIELDS FROM `extension_meta`[0m
+  [4;36;1mSQL (5.0ms)[0m   [0;1mdescribe `extension_meta`[0m
+  [4;35;1mSQL (3.0ms)[0m   [0mSHOW KEYS FROM `extension_meta`[0m
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW FIELDS FROM `layouts`[0m
+  [4;35;1mSQL (6.0ms)[0m   [0mdescribe `layouts`[0m
+  [4;36;1mSQL (5.0ms)[0m   [0;1mSHOW KEYS FROM `layouts`[0m
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW FIELDS FROM `page_parts`[0m
+  [4;36;1mSQL (5.0ms)[0m   [0;1mdescribe `page_parts`[0m
+  [4;35;1mSQL (3.0ms)[0m   [0mSHOW KEYS FROM `page_parts`[0m
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW FIELDS FROM `pages`[0m
+  [4;35;1mSQL (5.0ms)[0m   [0mdescribe `pages`[0m
+  [4;36;1mSQL (3.0ms)[0m   [0;1mSHOW KEYS FROM `pages`[0m
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW FIELDS FROM `sessions`[0m
+  [4;36;1mSQL (6.0ms)[0m   [0;1mdescribe `sessions`[0m
+  [4;35;1mSQL (4.0ms)[0m   [0mSHOW KEYS FROM `sessions`[0m
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW FIELDS FROM `snippets`[0m
+  [4;35;1mSQL (7.0ms)[0m   [0mdescribe `snippets`[0m
+  [4;36;1mSQL (5.0ms)[0m   [0;1mSHOW KEYS FROM `snippets`[0m
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW FIELDS FROM `users`[0m
+  [4;36;1mSQL (7.0ms)[0m   [0;1mdescribe `users`[0m
+  [4;35;1mSQL (5.0ms)[0m   [0mSHOW KEYS FROM `users`[0m
+  [4;36;1mUser Columns (6.0ms)[0m   [0;1mSHOW FIELDS FROM `users`[0m
+  [4;35;1mUser Load (12.0ms)[0m   [0mSELECT * FROM `users` WHERE (`users`.`login` = 'mohan') ORDER BY name LIMIT 1[0m
+  [4;36;1mSQL (1.0ms)[0m   [0;1mBEGIN[0m
+  [4;35;1mUser Load (228.0ms)[0m   [0mSELECT `users`.id FROM `users` WHERE (`users`.`login` = BINARY 'mohan') LIMIT 1[0m
+  [4;36;1mUser Create (0.0ms)[0m   [0;1mINSERT INTO `users` (`name`, `salt`, `updated_at`, `updated_by_id`, `admin`, `lock_version`, `created_by_id`, `notes`, `login`, `password`, `session_token`, `email`, `created_at`, `developer`) VALUES('Mohan', 'ca98bbd90780bf04c8a5960d53d2dde9c43daf74', '2010-12-14 21:51:13', NULL, 1, 0, NULL, NULL, 'mohan', '22b2eb7bbc3353d7cc4e94c614c2521ff189ce2a', NULL, NULL, '2010-12-14 21:51:13', 0)[0m
+  [4;35;1mSQL (2.0ms)[0m   [0mCOMMIT[0m
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mRadiant::Config Load (1.0ms)[0m   [0mSELECT * FROM `config` WHERE (`config`.`key` = 'admin.title') LIMIT 1[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mBEGIN[0m
+  [4;35;1mRadiant::Config Create (1.0ms)[0m   [0mINSERT INTO `config` (`value`, `key`) VALUES('Radiant CMS', 'admin.title')[0m
+Cache write: Radiant.cache_file
+  [4;36;1mRadiant::Config Load (1.0ms)[0m   [0;1mSELECT * FROM `config` [0m
+Cache write: Radiant::Config
+Cache read: Radiant.cache_file
+Cache write: Radiant.cache_mtime
+  [4;35;1mSQL (1.0ms)[0m   [0mCOMMIT[0m
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mRadiant::Config Load (0.0ms)[0m   [0mSELECT * FROM `config` WHERE (`config`.`key` = 'admin.subtitle') LIMIT 1[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mBEGIN[0m
+  [4;35;1mRadiant::Config Create (0.0ms)[0m   [0mINSERT INTO `config` (`value`, `key`) VALUES('Publishing for Small Teams', 'admin.subtitle')[0m
+Cache write: Radiant.cache_file
+  [4;36;1mRadiant::Config Load (0.0ms)[0m   [0;1mSELECT * FROM `config` [0m
+Cache write: Radiant::Config
+Cache read: Radiant.cache_file
+Cache write: Radiant.cache_mtime
+  [4;35;1mSQL (1.0ms)[0m   [0mCOMMIT[0m
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mRadiant::Config Load (0.0ms)[0m   [0mSELECT * FROM `config` WHERE (`config`.`key` = 'defaults.page.parts') LIMIT 1[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mBEGIN[0m
+  [4;35;1mRadiant::Config Create (0.0ms)[0m   [0mINSERT INTO `config` (`value`, `key`) VALUES('body, extended', 'defaults.page.parts')[0m
+Cache write: Radiant.cache_file
+  [4;36;1mRadiant::Config Load (0.0ms)[0m   [0;1mSELECT * FROM `config` [0m
+Cache write: Radiant::Config
+Cache read: Radiant.cache_file
+Cache write: Radiant.cache_mtime
+  [4;35;1mSQL (2.0ms)[0m   [0mCOMMIT[0m
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mRadiant::Config Load (1.0ms)[0m   [0mSELECT * FROM `config` WHERE (`config`.`key` = 'defaults.page.status') LIMIT 1[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mBEGIN[0m
+  [4;35;1mRadiant::Config Create (0.0ms)[0m   [0mINSERT INTO `config` (`value`, `key`) VALUES('draft', 'defaults.page.status')[0m
+Cache write: Radiant.cache_file
+  [4;36;1mRadiant::Config Load (1.0ms)[0m   [0;1mSELECT * FROM `config` [0m
+Cache write: Radiant::Config
+Cache read: Radiant.cache_file
+Cache write: Radiant.cache_mtime
+  [4;35;1mSQL (1.0ms)[0m   [0mCOMMIT[0m
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mRadiant::Config Load (0.0ms)[0m   [0mSELECT * FROM `config` WHERE (`config`.`key` = 'defaults.page.filter') LIMIT 1[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mBEGIN[0m
+  [4;35;1mRadiant::Config Create (0.0ms)[0m   [0mINSERT INTO `config` (`value`, `key`) VALUES('', 'defaults.page.filter')[0m
+Cache write: Radiant.cache_file
+  [4;36;1mRadiant::Config Load (1.0ms)[0m   [0;1mSELECT * FROM `config` [0m
+Cache write: Radiant::Config
+Cache read: Radiant.cache_file
+Cache write: Radiant.cache_mtime
+  [4;35;1mSQL (1.0ms)[0m   [0mCOMMIT[0m
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mRadiant::Config Load (0.0ms)[0m   [0mSELECT * FROM `config` WHERE (`config`.`key` = 'session_timeout') LIMIT 1[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mBEGIN[0m
+  [4;35;1mRadiant::Config Create (0.0ms)[0m   [0mINSERT INTO `config` (`value`, `key`) VALUES('1209600', 'session_timeout')[0m
+Cache write: Radiant.cache_file
+  [4;36;1mRadiant::Config Load (0.0ms)[0m   [0;1mSELECT * FROM `config` [0m
+Cache write: Radiant::Config
+Cache read: Radiant.cache_file
+Cache write: Radiant.cache_mtime
+  [4;35;1mSQL (0.0ms)[0m   [0mCOMMIT[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mPage Columns (3.0ms)[0m   [0;1mSHOW FIELDS FROM `pages`[0m
+  [4;35;1mSQL (4.0ms)[0m   [0mSELECT DISTINCT class_name FROM pages WHERE class_name <> '' AND class_name IS NOT NULL[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing SiteController#show_page (for 127.0.0.1 at 2010-12-14 16:52:45) [GET]
+  Parameters: {"action"=>"show_page", "url"=>"/", "controller"=>"site"}
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache write: Radiant.cache_file
+Cache write: Radiant.cache_file
+  [4;36;1mRadiant::Config Load (0.0ms)[0m   [0;1mSELECT * FROM `config` [0m
+  [4;35;1mRadiant::Config Columns (4.0ms)[0m   [0mSHOW FIELDS FROM `config`[0m
+Cache write: Radiant::Config
+Cache read: Radiant.cache_file
+Cache write: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mPage Load (0.0ms)[0m   [0mSELECT * FROM `pages` WHERE (`pages`.`parent_id` IS NULL) LIMIT 1[0m
+Redirected to http://localhost:3000/admin/welcome
+Completed in 5176ms (DB: 7) | 302 Found [http://localhost/]
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mPage Columns (2.0ms)[0m   [0mSHOW FIELDS FROM `pages`[0m
+  [4;36;1mSQL (4.0ms)[0m   [0;1mSELECT DISTINCT class_name FROM pages WHERE class_name <> '' AND class_name IS NOT NULL[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing Admin::WelcomeController#index (for 127.0.0.1 at 2010-12-14 16:52:50) [GET]
+  Parameters: {"action"=>"index", "controller"=>"admin/welcome"}
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+Redirected to http://localhost:3000/admin/pages
+Completed in 7ms (DB: 2) | 302 Found [http://localhost/admin/welcome]
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mPage Columns (3.0ms)[0m   [0;1mSHOW FIELDS FROM `pages`[0m
+  [4;35;1mSQL (3.0ms)[0m   [0mSELECT DISTINCT class_name FROM pages WHERE class_name <> '' AND class_name IS NOT NULL[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing Admin::PagesController#index (for 127.0.0.1 at 2010-12-14 16:52:51) [GET]
+  Parameters: {"action"=>"index", "controller"=>"admin/pages"}
+Redirected to http://localhost:3000/admin/login
+Filter chain halted as [:authenticate] rendered_or_redirected.
+Completed in 2ms (DB: 0) | 302 Found [http://localhost/admin/pages]
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mPage Columns (3.0ms)[0m   [0;1mSHOW FIELDS FROM `pages`[0m
+  [4;35;1mSQL (5.0ms)[0m   [0mSELECT DISTINCT class_name FROM pages WHERE class_name <> '' AND class_name IS NOT NULL[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing Admin::WelcomeController#login (for 127.0.0.1 at 2010-12-14 16:52:51) [GET]
+  Parameters: {"action"=>"login", "controller"=>"admin/welcome"}
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+Rendering template within layouts/application
+Rendering admin/welcome/login
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+Completed in 50ms (View: 37, DB: 9) | 200 OK [http://localhost/admin/login]
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mPage Columns (3.0ms)[0m   [0mSHOW FIELDS FROM `pages`[0m
+  [4;36;1mSQL (3.0ms)[0m   [0;1mSELECT DISTINCT class_name FROM pages WHERE class_name <> '' AND class_name IS NOT NULL[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing Admin::WelcomeController#login (for 127.0.0.1 at 2010-12-14 16:52:59) [POST]
+  Parameters: {"user"=>{"password"=>"[FILTERED]", "login"=>"mohan"}, "action"=>"login", "authenticity_token"=>"mqjarl9w0HmI2vOY5Iw9dskL2pr8RGRgBm+JOig5US4=", "controller"=>"admin/welcome"}
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mUser Columns (4.0ms)[0m   [0mSHOW FIELDS FROM `users`[0m
+  [4;36;1mUser Load (4.0ms)[0m   [0;1mSELECT * FROM `users` WHERE (`users`.`login` = 'mohan') ORDER BY name LIMIT 1[0m
+Redirected to http://localhost:3000/admin/pages
+Completed in 35ms (DB: 10) | 302 Found [http://localhost/admin/login]
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mPage Columns (3.0ms)[0m   [0;1mSHOW FIELDS FROM `pages`[0m
+  [4;35;1mSQL (2.0ms)[0m   [0mSELECT DISTINCT class_name FROM pages WHERE class_name <> '' AND class_name IS NOT NULL[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing Admin::PagesController#index (for 127.0.0.1 at 2010-12-14 16:52:59) [GET]
+  Parameters: {"action"=>"index", "controller"=>"admin/pages"}
+  [4;35;1mUser Columns (3.0ms)[0m   [0mSHOW FIELDS FROM `users`[0m
+  [4;36;1mUser Load (4.0ms)[0m   [0;1mSELECT * FROM `users` WHERE (`users`.`id` = 1) ORDER BY name[0m
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mPage Load (1.0ms)[0m   [0;1mSELECT * FROM `pages` [0m
+  [4;35;1mPage Load (0.0ms)[0m   [0mSELECT * FROM `pages` WHERE (`pages`.`parent_id` IS NULL) LIMIT 1[0m
+Rendering template within layouts/application
+Rendering admin/pages/index
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+Completed in 102ms (View: 66, DB: 14) | 200 OK [http://localhost/admin/pages]
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mPage Columns (3.0ms)[0m   [0mSHOW FIELDS FROM `pages`[0m
+  [4;36;1mSQL (7.0ms)[0m   [0;1mSELECT DISTINCT class_name FROM pages WHERE class_name <> '' AND class_name IS NOT NULL[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing Admin::PagesController#new (for 127.0.0.1 at 2010-12-14 16:53:03) [GET]
+  Parameters: {"action"=>"new", "controller"=>"admin/pages"}
+  [4;36;1mUser Columns (3.0ms)[0m   [0;1mSHOW FIELDS FROM `users`[0m
+  [4;35;1mUser Load (6.0ms)[0m   [0mSELECT * FROM `users` WHERE (`users`.`id` = 1) ORDER BY name[0m
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mPagePart Columns (3.0ms)[0m   [0mSHOW FIELDS FROM `page_parts`[0m
+  [4;36;1mSQL (3.0ms)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mCOMMIT[0m
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mSQL (0.0ms)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mCOMMIT[0m
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+Rendering template within layouts/application
+Rendering admin/pages/new
+Rendered admin/pages/_meta_row (3.0ms)
+Rendered admin/pages/_meta_row (1.0ms)
+Rendered admin/pages/_meta_row (1.0ms)
+Rendered admin/pages/_meta_row (1.0ms)
+Rendered admin/page_parts/_page_part (115.0ms)
+Rendered admin/page_parts/_page_part (14.0ms)
+  [4;36;1mLayout Load (1.0ms)[0m   [0;1mSELECT * FROM `layouts` ORDER BY name[0m
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+Rendered admin/pages/_fields (231.0ms)
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (49.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/pages/_popups (104.0ms)
+Rendered admin/pages/_edit_styles (9.0ms)
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+Completed in 452ms (View: 377, DB: 30) | 200 OK [http://localhost/admin/pages/new]
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mPage Columns (3.0ms)[0m   [0;1mSHOW FIELDS FROM `pages`[0m
+  [4;35;1mSQL (4.0ms)[0m   [0mSELECT DISTINCT class_name FROM pages WHERE class_name <> '' AND class_name IS NOT NULL[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing Admin::PagesController#create (for 127.0.0.1 at 2010-12-14 16:53:52) [POST]
+  Parameters: {"commit"=>"Create Page", "action"=>"create", "authenticity_token"=>"mqjarl9w0HmI2vOY5Iw9dskL2pr8RGRgBm+JOig5US4=", "controller"=>"admin/pages", "page"=>{"class_name"=>"", "slug"=>"/", "title"=>"Home", "breadcrumb"=>"Home", "parts_attributes"=>{"0"=>{"name"=>"body", "filter_id"=>"", "_delete"=>"", "id"=>"", "content"=>"This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan "}, "1"=>{"name"=>"extended", "filter_id"=>"", "_delete"=>"", "id"=>"", "content"=>""}}, "lock_version"=>"0", "description"=>"", "status_id"=>"100", "layout_id"=>"", "parent_id"=>"", "keywords"=>""}}
+  [4;35;1mUser Columns (4.0ms)[0m   [0mSHOW FIELDS FROM `users`[0m
+  [4;36;1mUser Load (6.0ms)[0m   [0;1mSELECT * FROM `users` WHERE (`users`.`id` = 1) ORDER BY name[0m
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mPagePart Columns (3.0ms)[0m   [0;1mSHOW FIELDS FROM `page_parts`[0m
+  [4;35;1mSQL (2.0ms)[0m   [0mBEGIN[0m
+  [4;36;1mPage Load (1.0ms)[0m   [0;1mSELECT `pages`.id FROM `pages` WHERE (`pages`.`slug` = BINARY '/' AND `pages`.parent_id IS NULL) LIMIT 1[0m
+  [4;35;1mPage Create (1.0ms)[0m   [0mINSERT INTO `pages` (`slug`, `class_name`, `virtual`, `updated_at`, `title`, `updated_by_id`, `breadcrumb`, `lock_version`, `created_by_id`, `description`, `status_id`, `published_at`, `parent_id`, `layout_id`, `created_at`, `keywords`) VALUES('/', '', 0, '2010-12-14 21:53:53', 'Home', NULL, 'Home', 0, 1, '', 100, '2010-12-14 16:53:52', NULL, NULL, '2010-12-14 21:53:53', '')[0m
+  [4;36;1mPagePart Create (0.0ms)[0m   [0;1mINSERT INTO `page_parts` (`name`, `filter_id`, `page_id`, `content`) VALUES('body', '', 1, 'This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan This is test from mohan ')[0m
+  [4;35;1mPagePart Create (1.0ms)[0m   [0mINSERT INTO `page_parts` (`name`, `filter_id`, `page_id`, `content`) VALUES('extended', '', 1, '')[0m
+  [4;36;1mSQL (2.0ms)[0m   [0;1mCOMMIT[0m
+Redirected to http://localhost:3000/admin/pages
+Completed in 104ms (DB: 22) | 302 Found [http://localhost/admin/pages]
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mPage Columns (4.0ms)[0m   [0;1mSHOW FIELDS FROM `pages`[0m
+  [4;35;1mSQL (4.0ms)[0m   [0mSELECT DISTINCT class_name FROM pages WHERE class_name <> '' AND class_name IS NOT NULL[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing Admin::PagesController#index (for 127.0.0.1 at 2010-12-14 16:53:53) [GET]
+  Parameters: {"action"=>"index", "controller"=>"admin/pages"}
+  [4;35;1mUser Columns (4.0ms)[0m   [0mSHOW FIELDS FROM `users`[0m
+  [4;36;1mUser Load (6.0ms)[0m   [0;1mSELECT * FROM `users` WHERE (`users`.`id` = 1) ORDER BY name[0m
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mPage Load (0.0ms)[0m   [0;1mSELECT * FROM `pages` [0m
+  [4;35;1mPage Load (1.0ms)[0m   [0mSELECT * FROM `pages` WHERE (`pages`.`parent_id` IS NULL) LIMIT 1[0m
+Rendering template within layouts/application
+Rendering admin/pages/index
+  [4;36;1mSQL (18.0ms)[0m   [0;1mSELECT count(*) AS count_all FROM `pages` WHERE (`pages`.parent_id = 1) [0m
+Rendered admin/pages/_node (42.0ms)
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+Completed in 88ms (View: 44, DB: 36) | 200 OK [http://localhost/admin/pages]
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mPage Columns (3.0ms)[0m   [0;1mSHOW FIELDS FROM `pages`[0m
+  [4;35;1mSQL (4.0ms)[0m   [0mSELECT DISTINCT class_name FROM pages WHERE class_name <> '' AND class_name IS NOT NULL[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing SiteController#show_page (for 127.0.0.1 at 2010-12-14 16:54:10) [GET]
+  Parameters: {"action"=>"show_page", "url"=>"/", "controller"=>"site"}
+  [4;35;1mUser Columns (3.0ms)[0m   [0mSHOW FIELDS FROM `users`[0m
+  [4;36;1mUser Load (4.0ms)[0m   [0;1mSELECT * FROM `users` WHERE (`users`.`id` = 1) ORDER BY name[0m
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mPage Load (1.0ms)[0m   [0mSELECT * FROM `pages` WHERE (`pages`.`parent_id` IS NULL) LIMIT 1[0m
+  [4;36;1mPagePart Load (1.0ms)[0m   [0;1mSELECT * FROM `page_parts` WHERE (`page_parts`.page_id = 1) ORDER BY id, name[0m
+  [4;35;1mPagePart Columns (3.0ms)[0m   [0mSHOW FIELDS FROM `page_parts`[0m
+  [4;36;1mPagePart Load (2.0ms)[0m   [0;1mSELECT * FROM `page_parts` WHERE (`page_parts`.`name` = 'body') AND (`page_parts`.page_id = 1) ORDER BY id LIMIT 1[0m
+Completed in 107ms (DB: 16) | 200 [http://localhost/]
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mPage Columns (3.0ms)[0m   [0;1mSHOW FIELDS FROM `pages`[0m
+  [4;35;1mSQL (3.0ms)[0m   [0mSELECT DISTINCT class_name FROM pages WHERE class_name <> '' AND class_name IS NOT NULL[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing Admin::PagesController#index (for 127.0.0.1 at 2010-12-14 16:54:23) [GET]
+  Parameters: {"action"=>"index", "controller"=>"admin/pages"}
+  [4;35;1mUser Columns (3.0ms)[0m   [0mSHOW FIELDS FROM `users`[0m
+  [4;36;1mUser Load (5.0ms)[0m   [0;1mSELECT * FROM `users` WHERE (`users`.`id` = 1) ORDER BY name[0m
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mPage Load (0.0ms)[0m   [0;1mSELECT * FROM `pages` [0m
+  [4;35;1mPage Load (1.0ms)[0m   [0mSELECT * FROM `pages` WHERE (`pages`.`parent_id` IS NULL) LIMIT 1[0m
+Rendering template within layouts/application
+Rendering admin/pages/index
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSELECT count(*) AS count_all FROM `pages` WHERE (`pages`.parent_id = 1) [0m
+Rendered admin/pages/_node (81.0ms)
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+Completed in 167ms (View: 129, DB: 17) | 200 OK [http://localhost/admin/pages]
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mPage Columns (3.0ms)[0m   [0;1mSHOW FIELDS FROM `pages`[0m
+  [4;35;1mSQL (3.0ms)[0m   [0mSELECT DISTINCT class_name FROM pages WHERE class_name <> '' AND class_name IS NOT NULL[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing Admin::PagesController#edit (for 127.0.0.1 at 2010-12-14 16:54:33) [GET]
+  Parameters: {"action"=>"edit", "id"=>"1", "controller"=>"admin/pages"}
+  [4;35;1mUser Columns (4.0ms)[0m   [0mSHOW FIELDS FROM `users`[0m
+  [4;36;1mUser Load (44.0ms)[0m   [0;1mSELECT * FROM `users` WHERE (`users`.`id` = 1) ORDER BY name[0m
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mPage Load (0.0ms)[0m   [0;1mSELECT * FROM `pages` WHERE (`pages`.`id` = 1) [0m
+Rendering template within layouts/application
+Rendering admin/pages/edit
+Rendered admin/pages/_meta_row (1.0ms)
+Rendered admin/pages/_meta_row (1.0ms)
+Rendered admin/pages/_meta_row (1.0ms)
+Rendered admin/pages/_meta_row (1.0ms)
+  [4;35;1mPagePart Load (0.0ms)[0m   [0mSELECT * FROM `page_parts` WHERE (`page_parts`.page_id = 1) ORDER BY id, name[0m
+  [4;36;1mPagePart Columns (2.0ms)[0m   [0;1mSHOW FIELDS FROM `page_parts`[0m
+Rendered admin/page_parts/_page_part (15.0ms)
+Rendered admin/page_parts/_page_part (16.0ms)
+  [4;35;1mLayout Load (0.0ms)[0m   [0mSELECT * FROM `layouts` ORDER BY name[0m
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mCACHE (0.0ms)[0m   [0mSELECT * FROM `users` WHERE (`users`.`id` = 1) ORDER BY name[0m
+Rendered admin/pages/_fields (474.0ms)
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/pages/_popups (101.0ms)
+Rendered admin/pages/_edit_styles (2.0ms)
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+Completed in 715ms (View: 632, DB: 61) | 200 OK [http://localhost/admin/pages/1/edit]
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mPage Columns (3.0ms)[0m   [0;1mSHOW FIELDS FROM `pages`[0m
+  [4;35;1mSQL (2.0ms)[0m   [0mSELECT DISTINCT class_name FROM pages WHERE class_name <> '' AND class_name IS NOT NULL[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing Admin::WelcomeController#index (for 127.0.0.1 at 2010-12-14 16:55:06) [GET]
+  Parameters: {"action"=>"index", "controller"=>"admin/welcome"}
+  [4;35;1mUser Columns (4.0ms)[0m   [0mSHOW FIELDS FROM `users`[0m
+  [4;36;1mUser Load (5.0ms)[0m   [0;1mSELECT * FROM `users` WHERE (`users`.`id` = 1) ORDER BY name[0m
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+Redirected to http://localhost:3000/admin/pages
+Completed in 17ms (DB: 10) | 302 Found [http://localhost/admin]
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mPage Columns (3.0ms)[0m   [0mSHOW FIELDS FROM `pages`[0m
+  [4;36;1mSQL (4.0ms)[0m   [0;1mSELECT DISTINCT class_name FROM pages WHERE class_name <> '' AND class_name IS NOT NULL[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing Admin::PagesController#index (for 127.0.0.1 at 2010-12-14 16:55:06) [GET]
+  Parameters: {"action"=>"index", "controller"=>"admin/pages"}
+  [4;36;1mUser Columns (3.0ms)[0m   [0;1mSHOW FIELDS FROM `users`[0m
+  [4;35;1mUser Load (6.0ms)[0m   [0mSELECT * FROM `users` WHERE (`users`.`id` = 1) ORDER BY name[0m
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mPage Load (0.0ms)[0m   [0mSELECT * FROM `pages` [0m
+  [4;36;1mPage Load (0.0ms)[0m   [0;1mSELECT * FROM `pages` WHERE (`pages`.`parent_id` IS NULL) LIMIT 1[0m
+Rendering template within layouts/application
+Rendering admin/pages/index
+  [4;35;1mSQL (1.0ms)[0m   [0mSELECT count(*) AS count_all FROM `pages` WHERE (`pages`.parent_id = 1) [0m
+Rendered admin/pages/_node (21.0ms)
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+Completed in 63ms (View: 36, DB: 16) | 200 OK [http://localhost/admin/pages]
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mPage Columns (3.0ms)[0m   [0mSHOW FIELDS FROM `pages`[0m
+  [4;36;1mSQL (4.0ms)[0m   [0;1mSELECT DISTINCT class_name FROM pages WHERE class_name <> '' AND class_name IS NOT NULL[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing Admin::PagesController#new (for 127.0.0.1 at 2010-12-14 16:55:12) [GET]
+  Parameters: {"action"=>"new", "page_id"=>"1", "controller"=>"admin/pages"}
+  [4;36;1mUser Columns (3.0ms)[0m   [0;1mSHOW FIELDS FROM `users`[0m
+  [4;35;1mUser Load (5.0ms)[0m   [0mSELECT * FROM `users` WHERE (`users`.`id` = 1) ORDER BY name[0m
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mPage Load (0.0ms)[0m   [0mSELECT * FROM `pages` WHERE (`pages`.`id` = 1) [0m
+  [4;36;1mCACHE (0.0ms)[0m   [0;1mSELECT * FROM `pages` WHERE (`pages`.`id` = 1) [0m
+  [4;35;1mCACHE (0.0ms)[0m   [0mSELECT * FROM `pages` WHERE (`pages`.`id` = 1) [0m
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mPagePart Columns (3.0ms)[0m   [0;1mSHOW FIELDS FROM `page_parts`[0m
+  [4;35;1mSQL (1.0ms)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mCOMMIT[0m
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mSQL (0.0ms)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mCOMMIT[0m
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mCACHE (0.0ms)[0m   [0mSELECT * FROM `pages` WHERE (`pages`.`id` = 1) [0m
+Rendering template within layouts/application
+Rendering admin/pages/new
+Rendered admin/pages/_meta_row (1.0ms)
+Rendered admin/pages/_meta_row (1.0ms)
+Rendered admin/pages/_meta_row (1.0ms)
+Rendered admin/pages/_meta_row (0.0ms)
+Rendered admin/page_parts/_page_part (15.0ms)
+Rendered admin/page_parts/_page_part (15.0ms)
+  [4;36;1mLayout Load (0.0ms)[0m   [0;1mSELECT * FROM `layouts` ORDER BY name[0m
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+Rendered admin/pages/_fields (78.0ms)
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/pages/_popups (100.0ms)
+Rendered admin/pages/_edit_styles (1.0ms)
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+Completed in 352ms (View: 231, DB: 27) | 200 OK [http://localhost/admin/pages/1/children/new]
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mPage Columns (3.0ms)[0m   [0;1mSHOW FIELDS FROM `pages`[0m
+  [4;35;1mSQL (43.0ms)[0m   [0mSELECT DISTINCT class_name FROM pages WHERE class_name <> '' AND class_name IS NOT NULL[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing Admin::PagesController#index (for 127.0.0.1 at 2010-12-14 16:55:19) [GET]
+  Parameters: {"action"=>"index", "controller"=>"admin/pages"}
+  [4;35;1mUser Columns (3.0ms)[0m   [0mSHOW FIELDS FROM `users`[0m
+  [4;36;1mUser Load (5.0ms)[0m   [0;1mSELECT * FROM `users` WHERE (`users`.`id` = 1) ORDER BY name[0m
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mPage Load (0.0ms)[0m   [0;1mSELECT * FROM `pages` [0m
+  [4;35;1mPage Load (1.0ms)[0m   [0mSELECT * FROM `pages` WHERE (`pages`.`parent_id` IS NULL) LIMIT 1[0m
+Rendering template within layouts/application
+Rendering admin/pages/index
+  [4;36;1mSQL (0.0ms)[0m   [0;1mSELECT count(*) AS count_all FROM `pages` WHERE (`pages`.parent_id = 1) [0m
+Rendered admin/pages/_node (22.0ms)
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+Completed in 125ms (View: 99, DB: 16) | 200 OK [http://localhost/admin/pages]
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mPage Columns (2.0ms)[0m   [0;1mSHOW FIELDS FROM `pages`[0m
+  [4;35;1mSQL (4.0ms)[0m   [0mSELECT DISTINCT class_name FROM pages WHERE class_name <> '' AND class_name IS NOT NULL[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing Admin::WelcomeController#index (for 127.0.0.1 at 2010-12-14 16:55:28) [GET]
+  Parameters: {"action"=>"index", "controller"=>"admin/welcome"}
+  [4;35;1mUser Columns (4.0ms)[0m   [0mSHOW FIELDS FROM `users`[0m
+  [4;36;1mUser Load (4.0ms)[0m   [0;1mSELECT * FROM `users` WHERE (`users`.`id` = 1) ORDER BY name[0m
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+Redirected to http://localhost:3000/admin/pages
+Completed in 28ms (DB: 9) | 302 Found [http://localhost/admin]
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mPage Columns (2.0ms)[0m   [0mSHOW FIELDS FROM `pages`[0m
+  [4;36;1mSQL (3.0ms)[0m   [0;1mSELECT DISTINCT class_name FROM pages WHERE class_name <> '' AND class_name IS NOT NULL[0m
+  [4;35;1mSQL (1.0ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing Admin::PagesController#index (for 127.0.0.1 at 2010-12-14 16:55:29) [GET]
+  Parameters: {"action"=>"index", "controller"=>"admin/pages"}
+  [4;36;1mUser Columns (3.0ms)[0m   [0;1mSHOW FIELDS FROM `users`[0m
+  [4;35;1mUser Load (5.0ms)[0m   [0mSELECT * FROM `users` WHERE (`users`.`id` = 1) ORDER BY name[0m
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mPage Load (1.0ms)[0m   [0mSELECT * FROM `pages` [0m
+  [4;36;1mPage Load (0.0ms)[0m   [0;1mSELECT * FROM `pages` WHERE (`pages`.`parent_id` IS NULL) LIMIT 1[0m
+Rendering template within layouts/application
+Rendering admin/pages/index
+  [4;35;1mSQL (0.0ms)[0m   [0mSELECT count(*) AS count_all FROM `pages` WHERE (`pages`.parent_id = 1) [0m
+Rendered admin/pages/_node (26.0ms)
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+Completed in 112ms (View: 76, DB: 17) | 200 OK [http://localhost/admin/pages]
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mPage Columns (3.0ms)[0m   [0mSHOW FIELDS FROM `pages`[0m
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSELECT DISTINCT class_name FROM pages WHERE class_name <> '' AND class_name IS NOT NULL[0m
+  [4;35;1mSQL (1.0ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing Admin::PagesController#new (for 127.0.0.1 at 2010-12-14 16:55:36) [GET]
+  Parameters: {"action"=>"new", "page_id"=>"1", "controller"=>"admin/pages"}
+  [4;36;1mUser Columns (4.0ms)[0m   [0;1mSHOW FIELDS FROM `users`[0m
+  [4;35;1mUser Load (6.0ms)[0m   [0mSELECT * FROM `users` WHERE (`users`.`id` = 1) ORDER BY name[0m
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mPage Load (0.0ms)[0m   [0mSELECT * FROM `pages` WHERE (`pages`.`id` = 1) [0m
+  [4;36;1mCACHE (0.0ms)[0m   [0;1mSELECT * FROM `pages` WHERE (`pages`.`id` = 1) [0m
+  [4;35;1mCACHE (0.0ms)[0m   [0mSELECT * FROM `pages` WHERE (`pages`.`id` = 1) [0m
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mPagePart Columns (3.0ms)[0m   [0;1mSHOW FIELDS FROM `page_parts`[0m
+  [4;35;1mSQL (1.0ms)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mCOMMIT[0m
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mSQL (0.0ms)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mCOMMIT[0m
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mCACHE (0.0ms)[0m   [0mSELECT * FROM `pages` WHERE (`pages`.`id` = 1) [0m
+Rendering template within layouts/application
+Rendering admin/pages/new
+Rendered admin/pages/_meta_row (1.0ms)
+Rendered admin/pages/_meta_row (1.0ms)
+Rendered admin/pages/_meta_row (1.0ms)
+Rendered admin/pages/_meta_row (1.0ms)
+Rendered admin/page_parts/_page_part (16.0ms)
+Rendered admin/page_parts/_page_part (16.0ms)
+  [4;36;1mLayout Load (1.0ms)[0m   [0;1mSELECT * FROM `layouts` ORDER BY name[0m
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+Rendered admin/pages/_fields (81.0ms)
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/pages/_popups (100.0ms)
+Rendered admin/pages/_edit_styles (1.0ms)
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+Completed in 358ms (View: 233, DB: 32) | 200 OK [http://localhost/admin/pages/1/children/new]
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mPage Columns (4.0ms)[0m   [0;1mSHOW FIELDS FROM `pages`[0m
+  [4;35;1mSQL (2.0ms)[0m   [0mSELECT DISTINCT class_name FROM pages WHERE class_name <> '' AND class_name IS NOT NULL[0m
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing Admin::PagesController#create (for 127.0.0.1 at 2010-12-14 17:00:29) [POST]
+  Parameters: {"commit"=>"Create Page", "action"=>"create", "authenticity_token"=>"mqjarl9w0HmI2vOY5Iw9dskL2pr8RGRgBm+JOig5US4=", "controller"=>"admin/pages", "page"=>{"class_name"=>"", "slug"=>"", "title"=>"", "breadcrumb"=>"", "parts_attributes"=>{"0"=>{"name"=>"body", "filter_id"=>"", "_delete"=>"", "id"=>"", "content"=>"SEcond page"}, "1"=>{"name"=>"extended", "filter_id"=>"", "_delete"=>"", "id"=>"", "content"=>""}}, "lock_version"=>"0", "description"=>"", "status_id"=>"100", "layout_id"=>"", "parent_id"=>"1", "keywords"=>""}}
+  [4;35;1mUser Columns (8.0ms)[0m   [0mSHOW FIELDS FROM `users`[0m
+  [4;36;1mUser Load (9.0ms)[0m   [0;1mSELECT * FROM `users` WHERE (`users`.`id` = 1) ORDER BY name[0m
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mPagePart Columns (3.0ms)[0m   [0;1mSHOW FIELDS FROM `page_parts`[0m
+  [4;35;1mSQL (2.0ms)[0m   [0mBEGIN[0m
+  [4;36;1mPage Load (1.0ms)[0m   [0;1mSELECT `pages`.id FROM `pages` WHERE (`pages`.`slug` = BINARY '' AND `pages`.parent_id = 1) LIMIT 1[0m
+  [4;35;1mSQL (1.0ms)[0m   [0mROLLBACK[0m
+Rendering template within layouts/application
+Rendering admin/pages/new
+Rendered admin/pages/_meta_row (3.0ms)
+Rendered admin/pages/_meta_row (3.0ms)
+Rendered admin/pages/_meta_row (0.0ms)
+Rendered admin/pages/_meta_row (1.0ms)
+Rendered admin/page_parts/_page_part (13.0ms)
+Rendered admin/page_parts/_page_part (14.0ms)
+  [4;36;1mLayout Load (1.0ms)[0m   [0;1mSELECT * FROM `layouts` ORDER BY name[0m
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+Rendered admin/pages/_fields (84.0ms)
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (1.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/references/_tag_reference (0.0ms)
+Rendered admin/pages/_popups (40.0ms)
+Rendered admin/pages/_edit_styles (1.0ms)
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mPage Columns (3.0ms)[0m   [0;1mSHOW FIELDS FROM `pages`[0m
+  [4;35;1mSQL (4.0ms)[0m   [0mSELECT DISTINCT class_name FROM pages WHERE class_name <> '' AND class_name IS NOT NULL[0m
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing Admin::PagesController#create (for 127.0.0.1 at 2010-12-14 17:00:42) [POST]
+  Parameters: {"commit"=>"Create Page", "action"=>"create", "authenticity_token"=>"mqjarl9w0HmI2vOY5Iw9dskL2pr8RGRgBm+JOig5US4=", "controller"=>"admin/pages", "page"=>{"class_name"=>"", "slug"=>"second-page", "title"=>"second page", "breadcrumb"=>"second page", "parts_attributes"=>{"0"=>{"name"=>"body", "filter_id"=>"", "_delete"=>"", "id"=>"", "content"=>"SEcond page"}, "1"=>{"name"=>"extended", "filter_id"=>"", "_delete"=>"", "id"=>"", "content"=>""}}, "lock_version"=>"0", "description"=>"", "status_id"=>"100", "layout_id"=>"", "parent_id"=>"1", "keywords"=>""}}
+  [4;35;1mUser Columns (4.0ms)[0m   [0mSHOW FIELDS FROM `users`[0m
+  [4;36;1mUser Load (4.0ms)[0m   [0;1mSELECT * FROM `users` WHERE (`users`.`id` = 1) ORDER BY name[0m
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mPagePart Columns (2.0ms)[0m   [0;1mSHOW FIELDS FROM `page_parts`[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mBEGIN[0m
+  [4;36;1mPage Load (1.0ms)[0m   [0;1mSELECT `pages`.id FROM `pages` WHERE (`pages`.`slug` = BINARY 'second-page' AND `pages`.parent_id = 1) LIMIT 1[0m
+  [4;35;1mPage Create (1.0ms)[0m   [0mINSERT INTO `pages` (`slug`, `class_name`, `virtual`, `updated_at`, `title`, `updated_by_id`, `breadcrumb`, `lock_version`, `created_by_id`, `description`, `status_id`, `published_at`, `parent_id`, `layout_id`, `created_at`, `keywords`) VALUES('second-page', '', 0, '2010-12-14 22:00:42', 'second page', NULL, 'second page', 0, 1, '', 100, '2010-12-14 17:00:42', 1, NULL, '2010-12-14 22:00:42', '')[0m
+  [4;36;1mPagePart Create (1.0ms)[0m   [0;1mINSERT INTO `page_parts` (`name`, `filter_id`, `page_id`, `content`) VALUES('body', '', 2, 'SEcond page')[0m
+  [4;35;1mPagePart Create (0.0ms)[0m   [0mINSERT INTO `page_parts` (`name`, `filter_id`, `page_id`, `content`) VALUES('extended', '', 2, '')[0m
+  [4;36;1mSQL (1.0ms)[0m   [0;1mCOMMIT[0m
+Redirected to http://localhost:3000/admin/pages
+Completed in 164ms (DB: 16) | 302 Found [http://localhost/admin/pages]
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mPage Columns (3.0ms)[0m   [0;1mSHOW FIELDS FROM `pages`[0m
+  [4;35;1mSQL (3.0ms)[0m   [0mSELECT DISTINCT class_name FROM pages WHERE class_name <> '' AND class_name IS NOT NULL[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing Admin::PagesController#index (for 127.0.0.1 at 2010-12-14 17:00:43) [GET]
+  Parameters: {"action"=>"index", "controller"=>"admin/pages"}
+  [4;35;1mUser Columns (3.0ms)[0m   [0mSHOW FIELDS FROM `users`[0m
+  [4;36;1mUser Load (4.0ms)[0m   [0;1mSELECT * FROM `users` WHERE (`users`.`id` = 1) ORDER BY name[0m
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mPage Load (1.0ms)[0m   [0;1mSELECT * FROM `pages` [0m
+  [4;35;1mPage Load (1.0ms)[0m   [0mSELECT * FROM `pages` WHERE (`pages`.`parent_id` IS NULL) LIMIT 1[0m
+Rendering template within layouts/application
+Rendering admin/pages/index
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSELECT count(*) AS count_all FROM `pages` WHERE (`pages`.parent_id = 1) [0m
+  [4;35;1mCACHE (0.0ms)[0m   [0mSELECT count(*) AS count_all FROM `pages` WHERE (`pages`.parent_id = 1) [0m
+  [4;36;1mPage Load (1.0ms)[0m   [0;1mSELECT * FROM `pages` WHERE (`pages`.parent_id = 1) ORDER BY virtual DESC, title ASC[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mSELECT count(*) AS count_all FROM `pages` WHERE (`pages`.parent_id = 2) [0m
+  [4;36;1mPage Load (0.0ms)[0m   [0;1mSELECT * FROM `pages` WHERE (`pages`.`id` = 1) [0m
+Rendered admin/pages/_node (13.0ms)
+Rendered admin/pages/_node (44.0ms)
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+Completed in 130ms (View: 91, DB: 17) | 200 OK [http://localhost/admin/pages]
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mPage Columns (3.0ms)[0m   [0;1mSHOW FIELDS FROM `pages`[0m
+  [4;35;1mSQL (3.0ms)[0m   [0mSELECT DISTINCT class_name FROM pages WHERE class_name <> '' AND class_name IS NOT NULL[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing SiteController#show_page (for 127.0.0.1 at 2010-12-14 17:00:46) [GET]
+  Parameters: {"action"=>"show_page", "url"=>"/", "controller"=>"site"}
+  [4;35;1mUser Columns (4.0ms)[0m   [0mSHOW FIELDS FROM `users`[0m
+  [4;36;1mUser Load (6.0ms)[0m   [0;1mSELECT * FROM `users` WHERE (`users`.`id` = 1) ORDER BY name[0m
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mPage Load (0.0ms)[0m   [0mSELECT * FROM `pages` WHERE (`pages`.`parent_id` IS NULL) LIMIT 1[0m
+  [4;36;1mPagePart Load (0.0ms)[0m   [0;1mSELECT * FROM `page_parts` WHERE (`page_parts`.page_id = 1) ORDER BY id, name[0m
+  [4;35;1mPagePart Columns (2.0ms)[0m   [0mSHOW FIELDS FROM `page_parts`[0m
+  [4;36;1mPagePart Load (1.0ms)[0m   [0;1mSELECT * FROM `page_parts` WHERE (`page_parts`.`name` = 'body') AND (`page_parts`.page_id = 1) ORDER BY id LIMIT 1[0m
+Completed in 107ms (DB: 16) | 200 [http://localhost/]
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mPage Columns (3.0ms)[0m   [0;1mSHOW FIELDS FROM `pages`[0m
+  [4;35;1mSQL (3.0ms)[0m   [0mSELECT DISTINCT class_name FROM pages WHERE class_name <> '' AND class_name IS NOT NULL[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing Admin::LayoutsController#index (for 127.0.0.1 at 2010-12-14 17:00:53) [GET]
+  Parameters: {"action"=>"index", "controller"=>"admin/layouts"}
+  [4;35;1mUser Columns (4.0ms)[0m   [0mSHOW FIELDS FROM `users`[0m
+  [4;36;1mUser Load (5.0ms)[0m   [0;1mSELECT * FROM `users` WHERE (`users`.`id` = 1) ORDER BY name[0m
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mLayout Load (1.0ms)[0m   [0;1mSELECT * FROM `layouts` ORDER BY name[0m
+Rendering template within layouts/application
+Rendering admin/layouts/index
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+Completed in 104ms (View: 64, DB: 17) | 200 OK [http://localhost/admin/layouts]
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mPage Columns (3.0ms)[0m   [0;1mSHOW FIELDS FROM `pages`[0m
+  [4;35;1mSQL (4.0ms)[0m   [0mSELECT DISTINCT class_name FROM pages WHERE class_name <> '' AND class_name IS NOT NULL[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing Admin::LayoutsController#new (for 127.0.0.1 at 2010-12-14 17:00:57) [GET]
+  Parameters: {"action"=>"new", "controller"=>"admin/layouts"}
+  [4;35;1mUser Columns (4.0ms)[0m   [0mSHOW FIELDS FROM `users`[0m
+  [4;36;1mUser Load (5.0ms)[0m   [0;1mSELECT * FROM `users` WHERE (`users`.`id` = 1) ORDER BY name[0m
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mLayout Columns (2.0ms)[0m   [0;1mSHOW FIELDS FROM `layouts`[0m
+Rendering template within layouts/application
+Rendering admin/layouts/new
+Rendered admin/layouts/_form (23.0ms)
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+Completed in 120ms (View: 79, DB: 18) | 200 OK [http://localhost/admin/layouts/new]
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mPage Columns (4.0ms)[0m   [0;1mSHOW FIELDS FROM `pages`[0m
+  [4;35;1mSQL (2.0ms)[0m   [0mSELECT DISTINCT class_name FROM pages WHERE class_name <> '' AND class_name IS NOT NULL[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing Admin::LayoutsController#create (for 127.0.0.1 at 2010-12-14 17:01:11) [POST]
+  Parameters: {"commit"=>"Create Layout", "action"=>"create", "authenticity_token"=>"mqjarl9w0HmI2vOY5Iw9dskL2pr8RGRgBm+JOig5US4=", "controller"=>"admin/layouts", "layout"=>{"content_type"=>"", "name"=>"Mohan", "lock_version"=>"0", "content"=>""}}
+  [4;35;1mUser Columns (4.0ms)[0m   [0mSHOW FIELDS FROM `users`[0m
+  [4;36;1mUser Load (4.0ms)[0m   [0;1mSELECT * FROM `users` WHERE (`users`.`id` = 1) ORDER BY name[0m
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mLayout Columns (2.0ms)[0m   [0;1mSHOW FIELDS FROM `layouts`[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mBEGIN[0m
+  [4;36;1mLayout Load (1.0ms)[0m   [0;1mSELECT `layouts`.id FROM `layouts` WHERE (`layouts`.`name` = BINARY 'Mohan') LIMIT 1[0m
+  [4;35;1mLayout Create (0.0ms)[0m   [0mINSERT INTO `layouts` (`name`, `content_type`, `updated_at`, `updated_by_id`, `lock_version`, `created_by_id`, `content`, `created_at`) VALUES('Mohan', '', '2010-12-14 22:01:12', NULL, 0, 1, '', '2010-12-14 22:01:12')[0m
+  [4;36;1mSQL (2.0ms)[0m   [0;1mCOMMIT[0m
+Redirected to http://localhost:3000/admin/layouts
+Completed in 54ms (DB: 14) | 302 Found [http://localhost/admin/layouts]
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mPage Columns (3.0ms)[0m   [0;1mSHOW FIELDS FROM `pages`[0m
+  [4;35;1mSQL (2.0ms)[0m   [0mSELECT DISTINCT class_name FROM pages WHERE class_name <> '' AND class_name IS NOT NULL[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing Admin::LayoutsController#index (for 127.0.0.1 at 2010-12-14 17:01:12) [GET]
+  Parameters: {"action"=>"index", "controller"=>"admin/layouts"}
+  [4;35;1mUser Columns (4.0ms)[0m   [0mSHOW FIELDS FROM `users`[0m
+  [4;36;1mUser Load (4.0ms)[0m   [0;1mSELECT * FROM `users` WHERE (`users`.`id` = 1) ORDER BY name[0m
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mLayout Load (1.0ms)[0m   [0;1mSELECT * FROM `layouts` ORDER BY name[0m
+Rendering template within layouts/application
+Rendering admin/layouts/index
+  [4;35;1mLayout Columns (3.0ms)[0m   [0mSHOW FIELDS FROM `layouts`[0m
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+Completed in 94ms (View: 53, DB: 18) | 200 OK [http://localhost/admin/layouts]
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mPage Columns (2.0ms)[0m   [0mSHOW FIELDS FROM `pages`[0m
+  [4;36;1mSQL (3.0ms)[0m   [0;1mSELECT DISTINCT class_name FROM pages WHERE class_name <> '' AND class_name IS NOT NULL[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing Admin::LayoutsController#edit (for 127.0.0.1 at 2010-12-14 17:01:16) [GET]
+  Parameters: {"action"=>"edit", "id"=>"1", "controller"=>"admin/layouts"}
+  [4;36;1mUser Columns (4.0ms)[0m   [0;1mSHOW FIELDS FROM `users`[0m
+  [4;35;1mUser Load (5.0ms)[0m   [0mSELECT * FROM `users` WHERE (`users`.`id` = 1) ORDER BY name[0m
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mLayout Columns (3.0ms)[0m   [0mSHOW FIELDS FROM `layouts`[0m
+  [4;36;1mLayout Load (5.0ms)[0m   [0;1mSELECT * FROM `layouts` WHERE (`layouts`.`id` = 1) ORDER BY name[0m
+Rendering template within layouts/application
+Rendering admin/layouts/edit
+  [4;35;1mCACHE (0.0ms)[0m   [0mSELECT * FROM `users` WHERE (`users`.`id` = 1) ORDER BY name[0m
+Rendered admin/layouts/_form (18.0ms)
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+Completed in 120ms (View: 69, DB: 24) | 200 OK [http://localhost/admin/layouts/1/edit]
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mPage Columns (3.0ms)[0m   [0mSHOW FIELDS FROM `pages`[0m
+  [4;36;1mSQL (3.0ms)[0m   [0;1mSELECT DISTINCT class_name FROM pages WHERE class_name <> '' AND class_name IS NOT NULL[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing Admin::LayoutsController#update (for 127.0.0.1 at 2010-12-14 17:01:23) [PUT]
+  Parameters: {"commit"=>"Save Changes", "action"=>"update", "_method"=>"put", "authenticity_token"=>"mqjarl9w0HmI2vOY5Iw9dskL2pr8RGRgBm+JOig5US4=", "id"=>"1", "controller"=>"admin/layouts", "layout"=>{"content_type"=>"", "name"=>"Mohan", "lock_version"=>"0", "content"=>"this is test"}}
+  [4;36;1mUser Columns (4.0ms)[0m   [0;1mSHOW FIELDS FROM `users`[0m
+  [4;35;1mUser Load (4.0ms)[0m   [0mSELECT * FROM `users` WHERE (`users`.`id` = 1) ORDER BY name[0m
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mLayout Columns (3.0ms)[0m   [0mSHOW FIELDS FROM `layouts`[0m
+  [4;36;1mLayout Load (3.0ms)[0m   [0;1mSELECT * FROM `layouts` WHERE (`layouts`.`id` = 1) ORDER BY name[0m
+  [4;35;1mSQL (1.0ms)[0m   [0mBEGIN[0m
+  [4;36;1mLayout Load (0.0ms)[0m   [0;1mSELECT `layouts`.id FROM `layouts` WHERE (`layouts`.`name` = BINARY 'Mohan' AND `layouts`.id <> 1) LIMIT 1[0m
+  [4;35;1mLayout Update with optimistic locking (1.0ms)[0m   [0m UPDATE `layouts`
+ SET `content` = 'this is test', `updated_by_id` = 1, `lock_version` = 1, `updated_at` = '2010-12-14 22:01:23'
+ WHERE id = 1
+ AND `lock_version` = 0
+[0m
+  [4;36;1mSQL (2.0ms)[0m   [0;1mCOMMIT[0m
+Redirected to http://localhost:3000/admin/layouts
+Completed in 60ms (DB: 19) | 302 Found [http://localhost/admin/layouts/1]
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mPage Columns (3.0ms)[0m   [0;1mSHOW FIELDS FROM `pages`[0m
+  [4;35;1mSQL (3.0ms)[0m   [0mSELECT DISTINCT class_name FROM pages WHERE class_name <> '' AND class_name IS NOT NULL[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing Admin::LayoutsController#index (for 127.0.0.1 at 2010-12-14 17:01:23) [GET]
+  Parameters: {"action"=>"index", "controller"=>"admin/layouts"}
+  [4;35;1mUser Columns (4.0ms)[0m   [0mSHOW FIELDS FROM `users`[0m
+  [4;36;1mUser Load (5.0ms)[0m   [0;1mSELECT * FROM `users` WHERE (`users`.`id` = 1) ORDER BY name[0m
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mLayout Load (0.0ms)[0m   [0;1mSELECT * FROM `layouts` ORDER BY name[0m
+Rendering template within layouts/application
+Rendering admin/layouts/index
+  [4;35;1mLayout Columns (3.0ms)[0m   [0mSHOW FIELDS FROM `layouts`[0m
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+Completed in 96ms (View: 56, DB: 17) | 200 OK [http://localhost/admin/layouts]
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mPage Columns (3.0ms)[0m   [0mSHOW FIELDS FROM `pages`[0m
+  [4;36;1mSQL (3.0ms)[0m   [0;1mSELECT DISTINCT class_name FROM pages WHERE class_name <> '' AND class_name IS NOT NULL[0m
+  [4;35;1mSQL (1.0ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing Admin::PagesController#index (for 127.0.0.1 at 2010-12-14 17:01:28) [GET]
+  Parameters: {"action"=>"index", "controller"=>"admin/pages"}
+  [4;36;1mUser Columns (4.0ms)[0m   [0;1mSHOW FIELDS FROM `users`[0m
+  [4;35;1mUser Load (5.0ms)[0m   [0mSELECT * FROM `users` WHERE (`users`.`id` = 1) ORDER BY name[0m
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mPage Load (0.0ms)[0m   [0mSELECT * FROM `pages` [0m
+  [4;36;1mPage Load (0.0ms)[0m   [0;1mSELECT * FROM `pages` WHERE (`pages`.`parent_id` IS NULL) LIMIT 1[0m
+Rendering template within layouts/application
+Rendering admin/pages/index
+  [4;35;1mSQL (0.0ms)[0m   [0mSELECT count(*) AS count_all FROM `pages` WHERE (`pages`.parent_id = 1) [0m
+  [4;36;1mCACHE (0.0ms)[0m   [0;1mSELECT count(*) AS count_all FROM `pages` WHERE (`pages`.parent_id = 1) [0m
+  [4;35;1mPage Load (1.0ms)[0m   [0mSELECT * FROM `pages` WHERE (`pages`.parent_id = 1) ORDER BY virtual DESC, title ASC[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mSELECT count(*) AS count_all FROM `pages` WHERE (`pages`.parent_id = 2) [0m
+  [4;35;1mPage Load (0.0ms)[0m   [0mSELECT * FROM `pages` WHERE (`pages`.`id` = 1) [0m
+Rendered admin/pages/_node (12.0ms)
+Rendered admin/pages/_node (44.0ms)
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+Completed in 133ms (View: 94, DB: 17) | 200 OK [http://localhost/admin/pages]
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mPage Columns (3.0ms)[0m   [0mSHOW FIELDS FROM `pages`[0m
+  [4;36;1mSQL (3.0ms)[0m   [0;1mSELECT DISTINCT class_name FROM pages WHERE class_name <> '' AND class_name IS NOT NULL[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing Admin::SnippetsController#index (for 127.0.0.1 at 2010-12-14 17:01:31) [GET]
+  Parameters: {"action"=>"index", "controller"=>"admin/snippets"}
+  [4;36;1mUser Columns (4.0ms)[0m   [0;1mSHOW FIELDS FROM `users`[0m
+  [4;35;1mUser Load (4.0ms)[0m   [0mSELECT * FROM `users` WHERE (`users`.`id` = 1) ORDER BY name[0m
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mSnippet Load (1.0ms)[0m   [0mSELECT * FROM `snippets` ORDER BY name[0m
+Rendering template within layouts/application
+Rendering admin/snippets/index
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+Completed in 101ms (View: 67, DB: 15) | 200 OK [http://localhost/admin/snippets]
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mPage Columns (4.0ms)[0m   [0mSHOW FIELDS FROM `pages`[0m
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSELECT DISTINCT class_name FROM pages WHERE class_name <> '' AND class_name IS NOT NULL[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing Admin::LayoutsController#index (for 127.0.0.1 at 2010-12-14 17:01:34) [GET]
+  Parameters: {"action"=>"index", "controller"=>"admin/layouts"}
+  [4;36;1mUser Columns (5.0ms)[0m   [0;1mSHOW FIELDS FROM `users`[0m
+  [4;35;1mUser Load (5.0ms)[0m   [0mSELECT * FROM `users` WHERE (`users`.`id` = 1) ORDER BY name[0m
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mLayout Load (1.0ms)[0m   [0mSELECT * FROM `layouts` ORDER BY name[0m
+Rendering template within layouts/application
+Rendering admin/layouts/index
+  [4;36;1mLayout Columns (2.0ms)[0m   [0;1mSHOW FIELDS FROM `layouts`[0m
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+Completed in 96ms (View: 52, DB: 21) | 200 OK [http://localhost/admin/layouts]
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mPage Columns (4.0ms)[0m   [0;1mSHOW FIELDS FROM `pages`[0m
+  [4;35;1mSQL (3.0ms)[0m   [0mSELECT DISTINCT class_name FROM pages WHERE class_name <> '' AND class_name IS NOT NULL[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing Admin::WelcomeController#index (for 127.0.0.1 at 2010-12-14 17:01:53) [GET]
+  Parameters: {"action"=>"index", "controller"=>"admin/welcome"}
+  [4;35;1mUser Columns (4.0ms)[0m   [0mSHOW FIELDS FROM `users`[0m
+  [4;36;1mUser Load (4.0ms)[0m   [0;1mSELECT * FROM `users` WHERE (`users`.`id` = 1) ORDER BY name[0m
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+Redirected to http://localhost:3000/admin/pages
+Completed in 27ms (DB: 9) | 302 Found [http://localhost/admin]
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mPage Columns (2.0ms)[0m   [0mSHOW FIELDS FROM `pages`[0m
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSELECT DISTINCT class_name FROM pages WHERE class_name <> '' AND class_name IS NOT NULL[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing Admin::PagesController#index (for 127.0.0.1 at 2010-12-14 17:01:53) [GET]
+  Parameters: {"action"=>"index", "controller"=>"admin/pages"}
+  [4;36;1mUser Columns (4.0ms)[0m   [0;1mSHOW FIELDS FROM `users`[0m
+  [4;35;1mUser Load (5.0ms)[0m   [0mSELECT * FROM `users` WHERE (`users`.`id` = 1) ORDER BY name[0m
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mPage Load (1.0ms)[0m   [0mSELECT * FROM `pages` [0m
+  [4;36;1mPage Load (1.0ms)[0m   [0;1mSELECT * FROM `pages` WHERE (`pages`.`parent_id` IS NULL) LIMIT 1[0m
+Rendering template within layouts/application
+Rendering admin/pages/index
+  [4;35;1mSQL (1.0ms)[0m   [0mSELECT count(*) AS count_all FROM `pages` WHERE (`pages`.parent_id = 1) [0m
+  [4;36;1mCACHE (0.0ms)[0m   [0;1mSELECT count(*) AS count_all FROM `pages` WHERE (`pages`.parent_id = 1) [0m
+  [4;35;1mPage Load (0.0ms)[0m   [0mSELECT * FROM `pages` WHERE (`pages`.parent_id = 1) ORDER BY virtual DESC, title ASC[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mSELECT count(*) AS count_all FROM `pages` WHERE (`pages`.parent_id = 2) [0m
+  [4;35;1mPage Load (1.0ms)[0m   [0mSELECT * FROM `pages` WHERE (`pages`.`id` = 1) [0m
+Rendered admin/pages/_node (13.0ms)
+Rendered admin/pages/_node (45.0ms)
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+Completed in 133ms (View: 93, DB: 20) | 200 OK [http://localhost/admin/pages]
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mPage Columns (3.0ms)[0m   [0mSHOW FIELDS FROM `pages`[0m
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSELECT DISTINCT class_name FROM pages WHERE class_name <> '' AND class_name IS NOT NULL[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing Admin::PagesController#remove (for 127.0.0.1 at 2010-12-14 17:01:57) [GET]
+  Parameters: {"action"=>"remove", "id"=>"2", "controller"=>"admin/pages"}
+  [4;36;1mUser Columns (5.0ms)[0m   [0;1mSHOW FIELDS FROM `users`[0m
+  [4;35;1mUser Load (5.0ms)[0m   [0mSELECT * FROM `users` WHERE (`users`.`id` = 1) ORDER BY name[0m
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mPage Load (1.0ms)[0m   [0mSELECT * FROM `pages` WHERE (`pages`.`id` = 2) [0m
+Rendering template within layouts/application
+Rendering admin/pages/remove
+  [4;36;1mSQL (0.0ms)[0m   [0;1mSELECT count(*) AS count_all FROM `pages` WHERE (`pages`.parent_id = 2) [0m
+  [4;35;1mCACHE (0.0ms)[0m   [0mSELECT count(*) AS count_all FROM `pages` WHERE (`pages`.parent_id = 2) [0m
+Rendered admin/pages/_node (16.0ms)
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+Completed in 115ms (View: 79, DB: 17) | 200 OK [http://localhost/admin/pages/2/remove]
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mPage Columns (3.0ms)[0m   [0mSHOW FIELDS FROM `pages`[0m
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSELECT DISTINCT class_name FROM pages WHERE class_name <> '' AND class_name IS NOT NULL[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing Admin::PagesController#destroy (for 127.0.0.1 at 2010-12-14 17:01:59) [DELETE]
+  Parameters: {"action"=>"destroy", "_method"=>"delete", "authenticity_token"=>"mqjarl9w0HmI2vOY5Iw9dskL2pr8RGRgBm+JOig5US4=", "id"=>"2", "controller"=>"admin/pages"}
+  [4;36;1mUser Columns (4.0ms)[0m   [0;1mSHOW FIELDS FROM `users`[0m
+  [4;35;1mUser Load (6.0ms)[0m   [0mSELECT * FROM `users` WHERE (`users`.`id` = 1) ORDER BY name[0m
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mPage Load (1.0ms)[0m   [0mSELECT * FROM `pages` WHERE (`pages`.`id` = 2) [0m
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSELECT count(*) AS count_all FROM `pages` WHERE (`pages`.parent_id = 2) [0m
+  [4;35;1mSQL (0.0ms)[0m   [0mBEGIN[0m
+  [4;36;1mPage Load (1.0ms)[0m   [0;1mSELECT * FROM `pages` WHERE (`pages`.parent_id = 2) ORDER BY virtual DESC, title ASC[0m
+  [4;35;1mPagePart Load (1.0ms)[0m   [0mSELECT * FROM `page_parts` WHERE (`page_parts`.page_id = 2) ORDER BY id, name[0m
+  [4;36;1mPagePart Columns (3.0ms)[0m   [0;1mSHOW FIELDS FROM `page_parts`[0m
+  [4;35;1mPagePart Destroy (1.0ms)[0m   [0mDELETE FROM `page_parts` WHERE `id` = 3[0m
+  [4;36;1mPagePart Destroy (1.0ms)[0m   [0;1mDELETE FROM `page_parts` WHERE `id` = 4[0m
+  [4;35;1mPage Destroy (0.0ms)[0m   [0mDELETE FROM `pages` WHERE `id` = 2 AND `lock_version` = 0[0m
+  [4;36;1mSQL (3.0ms)[0m   [0;1mCOMMIT[0m
+Redirected to http://localhost:3000/admin/pages
+Completed in 78ms (DB: 23) | 302 Found [http://localhost/admin/pages/2]
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mPage Columns (3.0ms)[0m   [0;1mSHOW FIELDS FROM `pages`[0m
+  [4;35;1mSQL (3.0ms)[0m   [0mSELECT DISTINCT class_name FROM pages WHERE class_name <> '' AND class_name IS NOT NULL[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing Admin::PagesController#index (for 127.0.0.1 at 2010-12-14 17:02:00) [GET]
+  Parameters: {"action"=>"index", "controller"=>"admin/pages"}
+  [4;35;1mUser Columns (4.0ms)[0m   [0mSHOW FIELDS FROM `users`[0m
+  [4;36;1mUser Load (4.0ms)[0m   [0;1mSELECT * FROM `users` WHERE (`users`.`id` = 1) ORDER BY name[0m
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mPage Load (0.0ms)[0m   [0;1mSELECT * FROM `pages` [0m
+  [4;35;1mPage Load (1.0ms)[0m   [0mSELECT * FROM `pages` WHERE (`pages`.`parent_id` IS NULL) LIMIT 1[0m
+Rendering template within layouts/application
+Rendering admin/pages/index
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSELECT count(*) AS count_all FROM `pages` WHERE (`pages`.parent_id = 1) [0m
+Rendered admin/pages/_node (27.0ms)
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mSQL (2.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+Completed in 113ms (View: 75, DB: 18) | 200 OK [http://localhost/admin/pages]
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mPage Columns (3.0ms)[0m   [0;1mSHOW FIELDS FROM `pages`[0m
+  [4;35;1mSQL (3.0ms)[0m   [0mSELECT DISTINCT class_name FROM pages WHERE class_name <> '' AND class_name IS NOT NULL[0m
+  [4;36;1mSQL (0.0ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing Admin::ExtensionsController#index (for 127.0.0.1 at 2010-12-14 17:02:03) [GET]
+  Parameters: {"action"=>"index", "controller"=>"admin/extensions"}
+  [4;35;1mUser Columns (4.0ms)[0m   [0mSHOW FIELDS FROM `users`[0m
+  [4;36;1mUser Load (7.0ms)[0m   [0;1mSELECT * FROM `users` WHERE (`users`.`id` = 1) ORDER BY name[0m
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+Rendering template within layouts/application
+Rendering admin/extensions/index
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+  [4;35;1mSQL (1.0ms)[0m   [0mSHOW TABLES[0m
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_file
+Cache read: Radiant.cache_mtime
+Cache read: Radiant.cache_file
+Cache read: Radiant::Config
+Completed in 133ms (View: 82, DB: 17) | 200 OK [http://localhost/admin/extensions]
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mPage Columns (2.0ms)[0m   [0mSHOW FIELDS FROM `pages`[0m
+  [4;36;1mSQL (2.0ms)[0m   [0;1mSELECT DISTINCT class_name FROM pages WHERE class_name <> '' AND class_name IS NOT NULL[0m
